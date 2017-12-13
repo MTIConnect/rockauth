@@ -35,7 +35,7 @@ module Rockauth
     end
 
     def failure
-      if params[:controller].split('/').last == 'sessions' && %w{new create}.include?(params['action'])
+      if params[:controller]&.split('/')&.last == 'sessions' && %w{new create}.include?(params['action'])
         build_resource
         render :new, flash: { error: I18n.t("rockauth.sessions.required") }
       else
