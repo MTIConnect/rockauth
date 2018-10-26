@@ -29,12 +29,12 @@ module Rockauth
         email.present?
       end
 
-      define_method :initiate_password_reset do
+      define_method :initiate_password_reset do |client|
         self.password_reset_token = SecureRandom.urlsafe_base64
         self.password_reset_token_expires_at = Rockauth::Configuration.password_reset_token_time_to_live.from_now
         if self.save
           Rails.logger.info "Sending password reset token for #{self.class}##{self.id}"
-          Rockauth::PasswordMailer.reset(email, password_reset_token, self).deliver_later
+          Rockauth::PasswordMailer.reset(email, password_reset_token, self, client).deliver_now
         else
           Rails.logger.error "Could not send password reset for #{self.class}##{self.id}: #{self.errors.to_json}"
         end
