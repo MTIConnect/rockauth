@@ -19,7 +19,7 @@ module Rockauth
       username = params.require(:user).require(:username)
       @resource_owner = resource_owner_class.with_username(username).first
       if @resource_owner.present? && @resource_owner.has_email?
-        @resource_owner.initiate_password_reset client
+        @resource_owner.initiate_password_reset client_id
         render_forgot_success
       else
         if Rockauth::Configuration.forgot_password_always_successful
@@ -62,10 +62,6 @@ module Rockauth
 
     def client_id
       @client_id ||= Authentication.order('created_at desc').find_by(resource_owner:@resource_owner)&.client_id
-    end
-
-    def client
-      @client ||= Rockauth::Configuration.clients.find { |c| c.id == client_id }
     end
   end
 end
