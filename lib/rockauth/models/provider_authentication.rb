@@ -18,11 +18,11 @@ module Rockauth
         validates_presence_of   :provider_user_id
         validates_presence_of   :provider_access_token
 
-        validate :validate_attributes_unchangable
+        validate :validate_attributes_unchangeable
 
         delegate :resource_owner_class, to: :authentication
 
-        define_method :validate_attributes_unchangable do
+        define_method :validate_attributes_unchangeable do
           %i(resource_owner_id resource_owner_type provider provider_user_id).each do |key|
             errors.add key, :rockauth_cannot_be_changed if !new_record? && public_send(:"#{key}_changed?")
           end
