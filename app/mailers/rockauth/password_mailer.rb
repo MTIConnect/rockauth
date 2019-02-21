@@ -8,7 +8,7 @@ class Rockauth::PasswordMailer < ActionMailer::Base
   end
 
   def reset_password_link
-    url_params = [:edit, @resource_owner.model_name.param_key, :session_password, user: { password_reset_token: @token }, subdomain: @resource_owner.subdomain]
+    url_params = [:edit, @resource_owner.model_name.param_key, :session_password, user: { password_reset_token: @token }, subdomain: 'mti-web-development']
     url_params.last.merge!(host: App.third_party_client_host[client.title]) if client.present? && App.third_party_client_host.keys.include?(client.title)
     url_for(url_params)
   end
