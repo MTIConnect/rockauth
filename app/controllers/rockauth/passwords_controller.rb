@@ -17,9 +17,11 @@ module Rockauth
 
     def forgot
       username = params.require(:user).require(:username)
+      subdomain = params[:subdomain]
+      origin = request.headers[:origin]
       @resource_owner = resource_owner_class.with_username(username).first
       if @resource_owner.present? && @resource_owner.has_email?
-        @resource_owner.initiate_password_reset
+        @resource_owner.initiate_password_reset(origin, subdomain)
         render_forgot_success
       else
         if Rockauth::Configuration.forgot_password_always_successful
